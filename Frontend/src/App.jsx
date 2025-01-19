@@ -7,6 +7,7 @@ import Events from './pages/Events.jsx';
 import About from './pages/About.jsx';
 import Contact from './pages/Contact.jsx';
 import SignUp from './pages/SignUp.jsx';
+import Footer from './components/Footer.jsx';
 
 const App = () => {
   return (
@@ -20,6 +21,7 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
       </Routes>
+      <Footer />
     </Router>
   );
 };
