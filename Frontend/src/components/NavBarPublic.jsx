@@ -54,16 +54,16 @@ const NavBarPublic = () => {
     <div>
       <div className={`${menuVis} bg-gray-700 text-white p-2 md:hidden`}>
         <div className='flex flex-col gap-2 bg-gray-800 p-2 rounded'>
-          <Link className='hover:bg-gray-600 p-2 rounded' onClick={()=>setMenuVis('hidden')}>
+          <Link to='/' className='hover:bg-gray-600 p-2 rounded' onClick={()=>setMenuVis('hidden')}>
             Home
           </Link>
-          <Link className='hover:bg-gray-600 p-2 rounded' onClick={()=>setMenuVis('hidden')}>
+          <Link to='/about' className='hover:bg-gray-600 p-2 rounded' onClick={()=>setMenuVis('hidden')}>
             About
           </Link>
-          <Link className='hover:bg-gray-600 p-2 rounded' onClick={()=>setMenuVis('hidden')}>
+          <Link to='/events' className='hover:bg-gray-600 p-2 rounded' onClick={()=>setMenuVis('hidden')}>
             Events
           </Link>
-          <Link className='hover:bg-gray-600 p-2 rounded' onClick={()=>setMenuVis('hidden')}>
+          <Link to='/contact' className='hover:bg-gray-600 p-2 rounded' onClick={()=>setMenuVis('hidden')}>
             Contact
           </Link>
         </div>
