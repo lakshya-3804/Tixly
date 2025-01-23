@@ -6,7 +6,7 @@ import 'react-phone-input-2/lib/style.css'
 const SignUp = () => {
   const [value, setValue] = useState()
   return (
-    <div className="mx-auto mt-[60px] w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
+    <div className="mx-auto mt-[60px] w-[80%] sm:w-full max-w-sm p-6 border rounded-lg shadow md:p-8 bg-gray-900 border-gray-700">
         <form className="space-y-6" action="#">
           <h5 className="text-xl font-medium text-gray-900 dark:text-white">Sign in to our platform</h5>
           <div>
@@ -16,7 +16,7 @@ const SignUp = () => {
         value={value}
         onChange={setValue}
         inputStyle={{
-          width: '100%', // Override inline styles from the library
+          width: '100%',
           height: '2.7rem',
           backgroundColor: '#4B5563',
           color: 'white',
