@@ -1,0 +1,39 @@
+/* Apply styles to the entire dropdown */
+.custom-dropdown {
+    width: 250px;
+  }
+  
+  /* Apply styles to the dropdown control (button) */
+  .custom-dropdown .Dropdown-control {
+    background-color: #374151 !important; /* Tailwind: bg-gray-700 */
+    color: white !important;
+    border: 1px solid #4b5563 !important; /* Tailwind: border-gray-600 */
+    padding: 9px;
+    border-radius: 8px;
+  }
+  
+  /* Style the dropdown menu */
+  .custom-dropdown .Dropdown-menu {
+    background-color: #1f2937 !important; /* Tailwind: bg-gray-800 */
+    border: 1px solid #4b5563 !important; /* Tailwind: border-gray-600 */
+    border-radius: 8px;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .custom-dropdown .Dropdown-arrow {
+    border-top-color: white !important;
+    margin-top:5px;
+  }
+  
+  /* Style the dropdown options */
+  .custom-dropdown .Dropdown-option {
+    color: white !important;
+    padding: 10px;
+    background-color: #1f2937; /* Tailwind: bg-gray-800 */
+  }
+  
+  /* Hover effect on options */
+  .custom-dropdown .Dropdown-option:hover {
+    background-color: #374151 !important; /* Tailwind: hover:bg-gray-700 */
+  }
+  

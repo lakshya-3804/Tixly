@@ -8,6 +8,7 @@ import About from './pages/About.jsx';
 import Contact from './pages/Contact.jsx';
 import SignUp from './pages/SignUp.jsx';
 import Footer from './components/Footer.jsx';
+import TrainLandingPage from './pages/TrainLandingPage.jsx';
 
 const App = () => {
   return (
@@ -20,6 +21,7 @@ const App = () => {
         <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path='/train' element={<TrainLandingPage />} />
       </Routes>
       <Footer />
     </Router>

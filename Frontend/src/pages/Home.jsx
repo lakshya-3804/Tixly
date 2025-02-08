@@ -122,7 +122,7 @@ const Home = () => {
         </p>
         <div className="flex flex-wrap justify-evenly sm:w-[90%] md:w-[70%] m-auto gap-y-5">
           <Link to='/login' className="bg-blue-600 text-white p-1 sm:px-6 sm:py-2 rounded-lg sm:w-[120px] sm:text-2xl w-[70px] text-center">Bus </Link>
-          <Link to='/login' className="bg-green-600 text-white p-1 sm:px-6 sm:py-2  rounded-lg sm:w-[120px] sm:text-2xl w-[70px] text-center">Train </Link>
+          <Link to='/train' className="bg-green-600 text-white p-1 sm:px-6 sm:py-2  rounded-lg sm:w-[120px] sm:text-2xl w-[70px] text-center">Train </Link>
           <Link to='/login' className="bg-red-600 text-white p-1 sm:px-6 sm:py-2  rounded-lg sm:w-[120px] sm:text-2xl w-[70px] text-center">Flight </Link>
           <Link to='/login' className="bg-yellow-600 text-white p-1 sm:px-6 sm:py-2 rounded-lg sm:w-[120px] sm:text-2xl w-[70px] text-center">Movie </Link>
         </div>
