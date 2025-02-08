@@ -36,8 +36,8 @@ Tixly is an all-in-one ticket booking platform for **buses, trains, flights, and
 
 ### **1️⃣ Clone the Repository**  
 ```sh
-git clone https://github.com/your-username/tixly.git
-cd tixly
+git clone https://github.com/lakshya-3804/Tixly.git
+cd Tixly
 ```
 
 ### **2️⃣ Install Dependencies and Run**
