@@ -1,12 +1,28 @@
 import React, { useEffect } from 'react';
 import { Link, useNavigate} from 'react-router-dom';
 import tixlogo from '../assets/tixlylogo.jpg';
-
-// home about events contact
+import { useSelector ,useDispatch } from 'react-redux';
+import { logout } from '../redux/logSlice.js';
+import { setUserDetails } from '../redux/userDetails.js';
 
 const NavBarPublic = () => {
 
   const [menuVis, setMenuVis] = React.useState('hidden');
+  const isLoggedIn=useSelector((state)=>state.logReducer.value);
+  const userDetails=useSelector((state)=>state.userDetailsReducer.value);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [isProfIconDropOpen, setProfIconDropOpen] = React.useState(false);
+
+  const handleLogout = async (e)=>{
+    try {
+      dispatch(logout());
+      dispatch(setUserDetails(null));
+      navigate('/');
+    } catch (error) {
+      console.error("Logout Error:", error.message);
+    }
+  }
 
   return (
     <div>
@@ -40,7 +56,15 @@ const NavBarPublic = () => {
 
       {/* Login button and main menu button */}
       <div className='flex items-center'>
-        <Link to='/login' className='bg-blue-600 px-4 py-2 rounded mx-1 hover:bg-blue-700'>Log-in</Link>
+        <Link className='relative' onClick={()=>setProfIconDropOpen((val)=>!val)}>
+          <img src={tixlogo} className={`w-10 h-10 rounded-full hover:border-white border border-gray-500 ${(isLoggedIn)?"":"hidden"}`}/>
+          <div className={`min-w-[150px] absolute right-2 z-10 top-12 flex flex-col gap-2 justify-evenly items-start bg-gray-600/80 shadow-md backdrop-blur-md p-4 rounded-lg  ${(isProfIconDropOpen)?"":"hidden"}`}>
+            <h2 className=''>{(userDetails)?userDetails.email:""}</h2>
+            <Link className='hover:font-bold'>Dashboard</Link>
+            <Link onClick={handleLogout} className=' hover:font-bold'>Logout</Link>
+          </div>
+        </Link>
+        <Link to='/login' className={`bg-blue-600 px-4 py-2 rounded mx-1 hover:bg-blue-700 ${(isLoggedIn)?"hidden":""}`}>Log-in</Link>
         <button className='bg-gray-700 ml-2 p-2 rounded text-gray-400 block md:hidden hover:bg-gray-800' onClick={()=>setMenuVis((val)=>(val==='hidden')?'':'hidden')}>
           <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>

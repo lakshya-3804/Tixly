@@ -10,13 +10,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^2.5.1",
     "datepicker": "^0.0.0",
+    "firebase": "^11.3.1",
     "react": "^18.3.1",
     "react-datepicker": "^7.6.0",
     "react-dom": "^18.3.1",
     "react-dropdown": "^1.11.0",
     "react-phone-input-2": "^2.15.1",
     "react-phone-number-input": "^3.4.10",
+    "react-redux": "^9.2.0",
     "react-router-dom": "^7.0.2",
     "react-select": "^5.10.0"
   },

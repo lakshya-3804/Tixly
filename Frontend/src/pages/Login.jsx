@@ -1,21 +1,70 @@
-import React,{useState} from 'react'
+import React,{useEffect, useState} from 'react'
 import { Link } from 'react-router-dom'
-
+import { auth } from "../firebase.js";
+import { signInWithEmailAndPassword , fetchSignInMethodsForEmail , GoogleAuthProvider, signInWithPopup} from "firebase/auth";
+import { useDispatch } from 'react-redux';
+import { login } from '../redux/logSlice.js';
+import { useNavigate } from 'react-router-dom';
+import { setUserDetails } from '../redux/userDetails.js';
 
 const Login = () => {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const provider = new GoogleAuthProvider();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleLogin= async (e)=>{
-    
+    e.preventDefault();
+    try {
+
+      const isRegistered = await fetchSignInMethodsForEmail(auth, email);
+      if(isRegistered.length===0){
+        throw new Error("User not registered!");
+      }
+
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      alert("Login Successful!");
+      dispatch(login());
+      dispatch(setUserDetails(userCredential.user));
+      navigate('/');
+
+    } catch (error) {
+      
+      if(error.message==="User not registered!"){
+        alert("User not registered!");
+      }
+      else alert("Invalid Credentials!");
+      console.error("Login Error:", error.message);
+      e.target.form.reset();
+    }
   }
+  
 
   const handleGoogleSignIn = async ()=>{
-    
+    try {
+      
+      const result = await signInWithPopup(auth, provider);
+      const email = result.user.email;
+      const isRegistered = await fetchSignInMethodsForEmail(auth, email);
+
+      if(isRegistered.length===0){
+        throw new Error("User not registered!");
+      }
+
+      alert("Google Login Successful!");
+      dispatch(login());
+      dispatch(setUserDetails(result.user));
+      navigate('/');
+    } catch (error) {
+      if(error.message==="User not registered!"){
+        alert("User not registered!");
+      }
+      else alert("Error in Google Login!");
+      console.error("Google Login Error:", error.message);
+    }
   }  
-
-
 
   return (
     <div className="mx-auto mt-[60px] w-[80%] sm:w-full max-w-sm p-6 border rounded-lg shadow md:p-8 dark:bg-gray-900 dark:border-gray-700">
@@ -24,7 +73,7 @@ const Login = () => {
           
           <div>
               <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
-              <input type="email" autoComplete="on" onChange={(e)=>setEmail(e.target.value)} name="email" id="email" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="name@company.com" required />
+              <input type="email" autoComplete="on" onChange={(e)=>setEmail(e.target.value)} name="email" id="email" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="xyz@gmail.com" required />
           </div>
           <div>
               <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your password</label>
