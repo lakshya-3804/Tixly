@@ -9,6 +9,7 @@ import Contact from './pages/Contact.jsx';
 import SignUp from './pages/SignUp.jsx';
 import Footer from './components/Footer.jsx';
 import TrainLandingPage from './pages/TrainLandingPage.jsx';
+import FlightLandingPage from './pages/FlightLandingPage.jsx';
 
 const App = () => {
   return (
@@ -22,6 +23,7 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path='/train' element={<TrainLandingPage />} />
+        <Route path='/flight' element={<FlightLandingPage />} />
       </Routes>
       <Footer />
     </Router>
