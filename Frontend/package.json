@@ -12,6 +12,7 @@
   "dependencies": {
     "@reduxjs/toolkit": "^2.5.1",
     "datepicker": "^0.0.0",
+    "dotenv": "^16.4.7",
     "firebase": "^11.3.1",
     "react": "^18.3.1",
     "react-datepicker": "^7.6.0",
