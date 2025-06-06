@@ -88,8 +88,8 @@ const NavBarPublic = () => {
           <Link to='/about' className='hover:bg-gray-600 p-2 rounded' onClick={()=>setMenuVis('hidden')}>
             About
           </Link>
-          <Link to='/events' className='hover:bg-gray-600 p-2 rounded' onClick={()=>setMenuVis('hidden')}>
-            Events
+          <Link to='/exclusive' className='hover:bg-gray-600 p-2 rounded' onClick={()=>setMenuVis('hidden')}>
+            Exclusives
           </Link>
           <Link to='/contact' className='hover:bg-gray-600 p-2 rounded' onClick={()=>setMenuVis('hidden')}>
             Contact

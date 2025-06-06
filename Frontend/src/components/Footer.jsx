@@ -9,8 +9,8 @@ import gthblogo from "../assets/icons8-github-96.png";
 const Footer = () => {
   return (
     <footer className="bg-gray-900 mt-[1px]">
-      <div className="mx-auto w-full max-w-screen-xl p-4 py-6 lg:py-8">
-        <div className="md:flex md:justify-between">
+      <div className="mx-auto w-full max-w-screen-xl p-4 py-6 lg:py-8 ">
+        <div className="md:flex md:justify-between ">
             {/* logo and title */}
           <div className="mb-6 md:mb-0">
             <div className="flex items-center">
@@ -19,7 +19,7 @@ const Footer = () => {
                 Tixly
               </p>
             </div>
-              <p className="text-gray-400 text-lg m-4 ml-1 w-[50%]">
+              <p className="text-gray-400 text-lg m-4 ml-1 md:w-[50%]">
                 Your easy and reliable train ticket booking platform. Book, manage, and travel hassle-free with real-time updates and seamless service.
               </p>
           </div>
@@ -69,7 +69,7 @@ const Footer = () => {
                 <li className="mb-4">
                   <a href="#" className="hover:underline"> Privacy Policy </a>
                 </li>
-                <li>
+                <li className="mb-4">
                   <a href="#" className="hover:underline"> Terms & Conditions </a>
                 </li>
                 <li>

@@ -12,7 +12,7 @@ const Contact = () => {
         Our team is here to help. Reach out via the form below or use any of the
         contact methods listed.
       </p>
-      <div className="min-h-screen text-gray-800 py-12 flex items-start justify-center p-5">
+      <div className="min-h-screen text-gray-800 py-12 flex flex-wrap md:flex-nowrap gap-y-10 items-start justify-center p-5">
         <div className="container mx-auto px-4">
           {/* Main Content Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
