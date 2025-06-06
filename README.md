@@ -1,6 +1,6 @@
 # **Tixly - Smart Ticket Booking System 🎟️**  
 
-### **🚀 Live Demo:** https://tixlylp.netlify.app/  
+### **🚀 Live Demo:** https://tixly-seven.vercel.app/ 
 
 ### **📌 Overview**  
 Tixly is an all-in-one ticket booking platform for **buses, trains, flights, and movies**. It provides a seamless and hassle-free booking experience with real-time availability, secure payments, and instant ticket generation.  
