@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  value: false,
+  value: JSON.parse(localStorage.getItem("isLoggedIn")) || false,  // if we reload the page, we want to keep the logged in state
+  // so we check localStorage for the value
 };
 
 const loggedInSlice = createSlice({
@@ -10,9 +11,11 @@ const loggedInSlice = createSlice({
   reducers: {
     logout: (state) => {
       state.value = false;
+      localStorage.removeItem("value");
     },
     login: (state) => {
       state.value = true;
+      localStorage.setItem("value", true);
     },
   },
 });

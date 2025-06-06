@@ -25,18 +25,18 @@ const TrainLandingPage = () => {
         {/* Tabs */}
         <div className="border-b border-gray-700">
             <ul className="flex flex-wrap justify-evenly -mb-px text-sm font-medium text-center text-gray-400 w-full">
-                <li class={`me-2`}>
+                <li className={`me-2`}>
                     <a href="#" className={`inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg hover:border-gray-300 hover:text-gray-300 group ${currtab === 0 ? 'border-b-2 text-white border-white' : ''}`} onClick={()=>setCurrtab(0)}>
                         <img className='w-4 h-4 mr-1' src={trainimg} /> Book Train Tickets
                     </a>
                 </li>
-                <li class="me-2">
+                <li className="me-2">
                     <a href="#" className={`inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg hover:border-gray-300 hover:text-gray-300 group ${currtab === 1 ? 'border-b-2 text-white border-white' : ''}`} onClick={()=>setCurrtab(1)}>
                         <img className='w-4 h-4 mr-1' src={calimg} /> Check Train Schedule
                     </a>
                 </li>
-                <li class="me-2">
-                    <a href="#" class={`inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg hover:border-gray-300 hover:text-gray-300 group ${currtab === 2 ? 'border-b-2 text-white border-white' : ''}`} onClick={()=>setCurrtab(2)}>
+                <li className="me-2">
+                    <a href="#" className={`inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg hover:border-gray-300 hover:text-gray-300 group ${currtab === 2 ? 'border-b-2 text-white border-white' : ''}`} onClick={()=>setCurrtab(2)}>
                         <img className='w-4 h-4 mr-1' src={statimg} /> Check Running Status
                     </a>
                 </li>
