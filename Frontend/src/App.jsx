@@ -8,6 +8,7 @@ import Contact from './pages/Contact.jsx';
 import SignUp from './pages/SignUp.jsx';
 import Footer from './components/Footer.jsx';
 import TrainLandingPage from './pages/TrainLandingPage.jsx';
+import FlightLandingPage from './pages/FlightLandingPage.jsx';
 import {Navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -79,7 +80,7 @@ const App = () => {
           <Route path='/dash' element={<DashBoard />} />
           <Route path='/train' element={<TrainLandingPage />} />
           <Route path='/bus' element={<BusLandingPage />} />
-          <Route path='/flight' element={<TrainLandingPage />} />
+          <Route path='/flight' element={<FlightLandingPage />} />
           <Route path='/movie' element={<TrainLandingPage />} />
         </Route>
         
