@@ -11,8 +11,11 @@ const userDetailsSlice = createSlice({
     setUserDetails: (state,action) => {
       state.value = action.payload;
     },
+    clearUserDetails: (state) => {
+      state.value = null;
+    },
   },
 });
 
-export const { setUserDetails } = userDetailsSlice.actions;
+export const { setUserDetails , clearUserDetails } = userDetailsSlice.actions;
 export default userDetailsSlice.reducer;

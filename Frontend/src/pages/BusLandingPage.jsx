@@ -6,16 +6,14 @@ import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
 import '../components/dropdown.css'
 
-import trainimg from '../assets/icons8-train-50.png'
-import calimg from '../assets/icons8-calender-50.png'
-import statimg from '../assets/icons8-status-50.png'
+import busimg from '../assets/icons8-bus-100.png'
 
-const TrainLandingPage = () => {
+const BusLandingPage = () => {
 
   const [currtab, setCurrtab] = useState(0);
   const [date, setDate] = useState(new Date());
   const options = [
-    'ALL Class', 'Sleeper Class', 'Third AC', 'Second AC', 'First AC', 'General Class', 'AC Chair Car'
+    'ALL Class', 'AC Sleeper','AC Seater' , 'Non-AC Sleeper' , 'Non-AC Seater'
   ];
 
   return (
@@ -27,26 +25,17 @@ const TrainLandingPage = () => {
             <ul className="flex flex-wrap justify-evenly -mb-px text-sm font-medium text-center text-gray-400 w-full">
                 <li className={`me-2`}>
                     <a href="#" className={`inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg hover:border-gray-300 hover:text-gray-300 group ${currtab === 0 ? 'border-b-2 text-white border-white' : ''}`} onClick={()=>setCurrtab(0)}>
-                        <img className='w-4 h-4 mr-1' src={trainimg} /> Book Train Tickets
+                        <img className='w-6 h-5 mr-1' src={busimg} />  Book Bus Tickets
                     </a>
                 </li>
-                <li className="me-2">
-                    <a href="#" className={`inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg hover:border-gray-300 hover:text-gray-300 group ${currtab === 1 ? 'border-b-2 text-white border-white' : ''}`} onClick={()=>setCurrtab(1)}>
-                        <img className='w-4 h-4 mr-1' src={calimg} /> Check Train Schedule
-                    </a>
-                </li>
-                <li className="me-2">
-                    <a href="#" className={`inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg hover:border-gray-300 hover:text-gray-300 group ${currtab === 2 ? 'border-b-2 text-white border-white' : ''}`} onClick={()=>setCurrtab(2)}>
-                        <img className='w-4 h-4 mr-1' src={statimg} /> Check Running Status
-                    </a>
-                </li>
+                
             </ul>
         </div>
 
         {/* MAIN */}
         <div className={`pb-6 w-[90%] m-auto mt-12 ${currtab === 0 ? 'block' : 'hidden'}`}>
             <div className='mt-12 mb-12'>
-                <h1 className='text-3xl text-white text-center mt-8'>Book Train Tickets</h1>
+                <h1 className='text-3xl text-white text-center mt-8'>Book Bus Tickets</h1>
                 <div className='flex flex-wrap justify-center items-center gap-4 mt-8'>
 
                     <Select styles={{
@@ -113,56 +102,10 @@ const TrainLandingPage = () => {
 
 
 
-        {/* Train Schedule */}
-        <div className={`pb-6 mt-12 ${currtab === 1 ? 'block' : 'hidden'}`}>
-          <h1 className='text-3xl text-white text-center mt-8'>Train Schedule</h1>
-          <div className='flex flex-wrap justify-center items-center gap-[50px] mt-8  mb-12 w-[90%] m-auto'>
-            <Select styles={{
-              control:(baseStyles, state) => ({
-                  ...baseStyles,
-                  backgroundColor: '#374151',
-                  color: 'white',
-                  borderColor: '#4b5563',
-                  width: '250px',
-                  fontSize: '1.2rem',
-              }),
-            }} placeholder='Train No./Name' />
-
-            <div className='flex justify-center items-center'>
-              <button className='bg-orange-500 text-white px-4 py-2 text-lg rounded-lg hover:bg-orange-600'>Search</button>
-            </div>
-
-          </div>
-        </div>
-
-
-
-        {/* Running Status */}
-        <div className={`pb-6 mt-12 ${currtab === 2 ? 'block' : 'hidden'}`}>
-          <h1 className='text-3xl text-white text-center mt-8'>Train Running Status</h1>
-          <div className='flex flex-wrap justify-center items-center gap-[50px] mt-8  mb-12 w-[90%] m-auto'>
-            <Select styles={{
-              control:(baseStyles, state) => ({
-                  ...baseStyles,
-                  backgroundColor: '#374151',
-                  color: 'white',
-                  borderColor: '#4b5563',
-                  width: '250px',
-                  fontSize: '1.2rem',
-              }),
-            }} placeholder='Train No./Name' />
-
-            <div className='flex justify-center items-center'>
-              <button className='bg-orange-500 text-white px-4 py-2 text-lg rounded-lg hover:bg-orange-600' >Search</button>
-            </div>
-
-          </div>
-        </div>
-
 
       </div>
     </div>
   )
 }
 
-export default TrainLandingPage
+export default BusLandingPage
