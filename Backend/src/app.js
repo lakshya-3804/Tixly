@@ -30,9 +30,10 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 // app.use(express.static('public'));
 app.use(cookieParser());
+app.use('/api/user', userRouter)
+
 app.use(express.static(clientDist)); // Serve static files from the client build directory
 
-app.use('/api/user', userRouter)
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(clientDist,'index.html'));
