@@ -56,7 +56,7 @@ npm run dev
 5️⃣ Get instant confirmation & e-ticket.  
 
 ## **🔐 Authentication**
-- JWT-based authentication ensures secure login & registration.
+- Firebase-based authentication ensures secure login & registration.
 - Role-based access for users and admins.
 - Passwords are securely hashed before storage.
 
