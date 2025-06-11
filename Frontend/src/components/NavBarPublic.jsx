@@ -70,8 +70,8 @@ const NavBarPublic = () => {
         </div>
         <Link to='/signup' className={`bg-blue-600 px-4 py-2 rounded mx-1 hover:bg-blue-700 ${(isLoggedIn)?"hidden":""}`}>Register</Link>
         <button className='bg-gray-700 ml-2 p-2 rounded text-gray-400 block md:hidden hover:bg-gray-800' onClick={()=>setMenuVis((val)=>(val==='hidden')?'':'hidden')}>
-          <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>
+          <svg className="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 1h15M1 7h15M1 13h15"/>
           </svg>
         </button>
       </div>
