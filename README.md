@@ -27,7 +27,7 @@ Tixly is an all-in-one ticket booking platform for **buses, trains, flights, and
 ### **Backend:**  
 - ExpressJS 🚀  
 - MongoDB (Database)  
-- JWT (Authentication)  
+- Firebase (Authentication)  
 - Node.js  
 
 ---
