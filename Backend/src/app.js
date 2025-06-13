@@ -2,8 +2,10 @@ import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser'
 import userRouter from './routers/user.route.js';
+import flightRouter from './routers/flight.route.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import fs from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -31,13 +33,20 @@ app.use(express.urlencoded({extended:true}));
 // app.use(express.static('public'));
 app.use(cookieParser());
 app.use('/api/user', userRouter)
+app.use('/api/flight', flightRouter);
 
 app.use(express.static(clientDist)); // Serve static files from the client build directory
 
 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(clientDist,'index.html'));
-});
+if (fs.existsSync(clientDist)) {
+    app.use(express.static(clientDist));
+    app.get('*', (req, res) => {
+        res.sendFile(path.join(clientDist, 'index.html'));
+    });
+} else {
+    // If Frontend/dist doesn't exist, just serve the API
+    console.log('Frontend build not found. Running in API-only mode.');
+}
 
 
 export {app};
