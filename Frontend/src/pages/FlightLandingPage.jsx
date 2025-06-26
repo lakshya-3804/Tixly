@@ -5,21 +5,36 @@ import "react-datepicker/dist/react-datepicker.css";
 import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
 import '../components/dropdown.css'
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+
+const API_BASE_URL = 'http://localhost:5000/api/flight';
 
 const FlightLandingPage = () => {
+  const navigate = useNavigate();
   const [currtab, setCurrtab] = useState(0);
   const [dateDeparture, setDateDeparture] = useState(new Date());
   const [dateReturn, setDateReturn] = useState(new Date());
-  const [showTravellers, setShowTravellers] = useState(false)
+  const [showTravellers, setShowTravellers] = useState(false);
+  const [airports, setAirports] = useState([]);
+  const [selectedFrom, setSelectedFrom] = useState(null);
+  const [selectedTo, setSelectedTo] = useState(null);
+  const [searchResults, setSearchResults] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [loadingAirports, setLoadingAirports] = useState(false);
+  const [selectedClass, setSelectedClass] = useState('All Class');
   const [travellers, setTravellers] = useState({
     infants: 0,
     kids: 0,
     adults: 1,   
     senior: 0,
-  })
+  });
+
   const ClassOptions = [
-    'All Class', 'Economy', 'Premium Economy' , 'Business', 'First Class'
+    'All Class', 'ECONOMY', 'PREMIUM_ECONOMY', 'BUSINESS', 'FIRST'
   ];
+
   const updateTraveller = (category, diff) => {
     const newCount = travellers[category] + diff
     if (newCount < 0 || newCount > 9) return
@@ -29,7 +44,103 @@ const FlightLandingPage = () => {
       [category]: newCount
     })
   }
- 
+
+  const handleAirportSearch = async (inputValue) => {
+    try {
+      setLoadingAirports(true);
+      setError(null);
+      
+      if (!inputValue || typeof inputValue !== 'string') {
+        console.log('Frontend: Invalid input value:', inputValue);
+        return [];
+      }
+
+      const keyword = inputValue.trim();
+      if (!keyword) {
+        return [];
+      }
+      
+      console.log('Frontend: Searching airports for:', keyword);
+      const response = await axios.get(`${API_BASE_URL}/airports`, {
+        params: { keyword }
+      });
+      
+      console.log('Frontend: Raw response:', response);
+      console.log('Frontend: Response data:', response.data);
+      
+      if (!response.data || response.data.length === 0) {
+        console.log('Frontend: No airports found');
+        return [];
+      }
+
+      const formattedAirports = response.data.map(airport => {
+        console.log('Frontend: Processing airport:', airport);
+        return {
+          value: airport.iataCode,
+          label: `${airport.name} (${airport.iataCode}) - ${airport.cityName}, ${airport.countryName}`
+        };
+      });
+
+      console.log('Frontend: Final formatted airports:', formattedAirports);
+      setAirports(formattedAirports);
+      return formattedAirports;
+    } catch (error) {
+      console.error('Frontend: Error searching airports:', {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status
+      });
+      setError(error.response?.data?.details || 'Failed to search airports');
+      return [];
+    } finally {
+      setLoadingAirports(false);
+    }
+  };
+
+  const handleSearch = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      if (!selectedFrom || !selectedTo) {
+        setError('Please select both departure and arrival airports');
+        return;
+      }
+
+      const searchParams = {
+        originLocationCode: selectedFrom.value,
+        destinationLocationCode: selectedTo.value,
+        departureDate: dateDeparture.toISOString().split('T')[0],
+        adults: travellers.adults,
+        senior: travellers.senior,
+        children: travellers.kids,
+        infants: travellers.infants,
+        travelClass: selectedClass === 'All Class' ? '' : selectedClass,
+        currency: 'USD'
+      };
+
+      if (currtab === 1) { // Round trip
+        searchParams.returnDate = dateReturn.toISOString().split('T')[0];
+      }
+
+      console.log('Search params:', searchParams);
+
+      // Navigate to search results page with search parameters
+      navigate('/flight-search', { 
+        state: { 
+          searchParams,
+          isRoundTrip: currtab === 1
+        }
+      });
+      
+    } catch (error) {
+      console.error('Error preparing search:', error);
+      setError('Failed to prepare search. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div>
       <div className='bg-gray-900 w-[80%] m-auto rounded-lg mt-12'>
@@ -71,7 +182,31 @@ const FlightLandingPage = () => {
                             fontSize: '1.2rem',
                             borderRadius: '0.375rem',
                         }),
-                    }} placeholder='From' />
+                        menu: (base) => ({
+                          ...base,
+                          backgroundColor: '#374151',
+                          color: 'white',
+                        }),
+                        option: (base, state) => ({
+                          ...base,
+                          backgroundColor: state.isFocused ? '#4b5563' : '#374151',
+                          color: 'white',
+                          ':active': {
+                            backgroundColor: '#4b5563',
+                          },
+                        }),
+                    }} placeholder='From'
+                      value={selectedFrom}
+                      onChange={setSelectedFrom}
+                      onInputChange={(value) => {
+                        if (value) {
+                          handleAirportSearch(value);
+                        }
+                      }}
+                      isLoading={loadingAirports}
+                      isSearchable
+                      options={airports}
+                     />
 
                     <Select styles={{
                         control:(baseStyles, state) => ({
@@ -83,7 +218,31 @@ const FlightLandingPage = () => {
                             fontSize: '1.2rem',
                             borderRadius: '0.375rem',
                         }),
-                    }} placeholder='To' />
+                        menu: (base) => ({
+                          ...base,
+                          backgroundColor: '#374151',
+                          color: 'white',
+                        }),
+                        option: (base, state) => ({
+                          ...base,
+                          backgroundColor: state.isFocused ? '#4b5563' : '#374151',
+                          color: 'white',
+                          ':active': {
+                            backgroundColor: '#4b5563',
+                          },
+                        }),
+                    }} placeholder='To' 
+                    value={selectedTo}
+                      onChange={setSelectedTo}
+                      onInputChange={(value) => {
+                        if (value) {
+                          handleAirportSearch(value);
+                        }
+                      }}
+                      isLoading={loadingAirports}
+                      isSearchable
+                      options={airports}
+                    />
 
 
                   <div className="flex relative">
@@ -109,7 +268,8 @@ const FlightLandingPage = () => {
 
                   <Dropdown
                     options={ClassOptions}
-                    value={ClassOptions[0]}
+                    value={selectedClass}
+                    onChange={(option) => setSelectedClass(option.value)}
                     placeholder="Select an option"
                     className="custom-dropdown"
                   />
@@ -159,9 +319,57 @@ const FlightLandingPage = () => {
                 </div>
             </div>
 
+            {error && (
+              <div className="w-full text-red-500 text-center mt-4">
+                {error}
+              </div>
+            )}
+
             <div className='flex justify-center items-center mt-4'>
-                <button className='bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600'>Search</button>
+                <button 
+                  className='bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 disabled:opacity-50'
+                  onClick={handleSearch}
+                  disabled={loading}
+                >
+                  {loading ? 'Searching...' : 'Search'}
+                </button>
             </div>
+
+            {searchResults && (
+              <div className="w-full mt-8">
+                <h2 className="text-2xl text-white mb-4">Available Flights</h2>
+                <div className="space-y-4">
+                  {searchResults.filter(flight => {
+                    const firstSegment = flight.itineraries[0].segments[0];
+                    const lastSegment = flight.itineraries[0].segments[flight.itineraries[0].segments.length - 1];
+                    return firstSegment.departure.airport === selectedFrom.value && 
+                           lastSegment.arrival.airport === selectedTo.value;
+                  }).map((flight) => (
+                    <div key={flight.id} className="bg-gray-800 p-4 rounded-lg">
+                      <div className="flex justify-between items-center">
+                        <div>
+                          <p className="text-white">
+                            {flight.itineraries[0].segments[0].departure.airport} → {flight.itineraries[0].segments[flight.itineraries[0].segments.length - 1].arrival.airport}
+                          </p>
+                          <p className="text-gray-400">
+                            {new Date(flight.itineraries[0].segments[0].departure.time).toLocaleTimeString()} - 
+                            {new Date(flight.itineraries[0].segments[flight.itineraries[0].segments.length - 1].arrival.time).toLocaleTimeString()}
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-white text-xl">
+                            {flight.price.currency} {flight.price.total}
+                          </p>
+                          <p className="text-gray-400">
+                            {flight.itineraries[0].duration}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
         </div>
         {/* ROUND TRIP */}
@@ -239,7 +447,8 @@ const FlightLandingPage = () => {
 
                   <Dropdown
                     options={ClassOptions}
-                    value={ClassOptions[0]}
+                    value={selectedClass}
+                    onChange={(option) => setSelectedClass(option.value)}
                     placeholder="Select an option"
                     className="custom-dropdown"
                   />
