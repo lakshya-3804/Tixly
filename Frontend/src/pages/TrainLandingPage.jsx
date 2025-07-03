@@ -12,12 +12,14 @@ import debounce from 'lodash.debounce'
 import trainimg from '../assets/icons8-train-50.png'
 import calimg from '../assets/icons8-calender-50.png'
 import statimg from '../assets/icons8-status-50.png'
+import { useNavigate } from 'react-router-dom'
 
 const TrainLandingPage = () => {
   const [currtab, setCurrtab] = useState(0)
   const [date, setDate] = useState(new Date())
   const [fromStation, setFromStation] = useState(null)
   const [toStation, setToStation] = useState(null)
+  const navigate = useNavigate();
 
   const classOptions = [
     'ALL Class', 'Sleeper Class', 'Third AC', 'Second AC', 'First AC', 'General Class', 'AC Chair Car'
@@ -28,10 +30,14 @@ const TrainLandingPage = () => {
     if (!inputValue) return [];
     try {
       console.log("Fetching stations for:", inputValue);
-      const res = await axios.post("http://localhost:3001/api/user/stations", {
+      const res = await axios.post("http://localhost:3001/api/train/stations", {
         search: inputValue,
       });
-      return res.data.map((stn) => ({
+      if(res.data.length === 0) {
+        console.warn("No stations found for:", inputValue);
+        return [];
+      }
+      return res.data.data.map((stn) => ({
         label: `${stn.name} (${stn.code})`,
         value: stn.code,
       }));
@@ -54,6 +60,45 @@ const TrainLandingPage = () => {
     []
   )
 
+  const handleTrainSearch = async () => {
+    if (!fromStation || !toStation || !date) {
+      alert('Please select both stations and a date.')
+      return
+    }
+    // fromcode and tocode are the station codes
+    // pass fromstationcode in from and tostationcode in to
+    const from = fromStation.value
+    const to = toStation.value
+    const dt = date.toISOString().split('T')[0]
+    console.log(`Searching trains from ${from} to ${to} on ${dt}`)
+    try {
+      const response = await axios.get(`http://localhost:3001/api/train/trainbetweenstations`, {
+        params: {
+          from,
+          to,
+          date: dt
+        }
+      })
+      // console.log('Train search results:', response.data)
+      navigate('/train-search', {
+        state: {
+          data: response.data,
+          fromStation: fromStation,
+          toStation: toStation,
+          date: dt
+        }
+      });
+      // Handle the response data as needed
+    } catch (error) {
+      console.error('Error fetching train data:', error)
+      alert('Failed to fetch train data. Please try again later.')
+    }
+  }
+
+
+  
+
+  
 
   return (
     <div>
@@ -141,7 +186,7 @@ const TrainLandingPage = () => {
               />
             </div>
             <div className="flex justify-center items-center mt-4">
-              <button className="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600">
+              <button onClick={handleTrainSearch} className="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600">
                 Search
               </button>
             </div>

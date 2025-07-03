@@ -22,6 +22,7 @@ import BusLandingPage from './pages/BusLandingPage.jsx';
 import DashBoard from './pages/DashBoard.jsx';
 import Exclusives from './pages/Exclusives.jsx';
 import ForgotPassword from './pages/ForgotPassword.jsx';
+import TrainSearchList from './pages/TrainSearchList.jsx';
 
 const PrivateRoute = ({authChecked}) => { 
   const logged = useSelector((state) => state.logReducer.value);
@@ -88,6 +89,7 @@ const App = () => {
           <Route path='/flight-booking' element={<FlightBookingPage />} />
           <Route path='/flight-review' element={<FlightReviewPage />} />
           <Route path='/movie' element={<TrainLandingPage />} />
+          <Route path='/train-search' element={<TrainSearchList />} />
         </Route>
         
         <Route path='*' element={<Home />} />

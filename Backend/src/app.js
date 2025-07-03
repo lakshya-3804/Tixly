@@ -3,6 +3,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser'
 import userRouter from './routers/user.route.js';
 import flightRouter from './routers/flight.route.js';
+import trainRouter from './routers/train.route.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
@@ -33,6 +34,7 @@ app.use(express.urlencoded({extended:true}));
 // app.use(express.static('public'));
 app.use(cookieParser());
 app.use('/api/user', userRouter)
+app.use('/api/train', trainRouter);
 app.use('/api/flight', flightRouter);
 
 app.use(express.static(clientDist)); // Serve static files from the client build directory
