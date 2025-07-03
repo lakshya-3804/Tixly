@@ -14,6 +14,8 @@ import calimg from '../assets/icons8-calender-50.png'
 import statimg from '../assets/icons8-status-50.png'
 import { useNavigate } from 'react-router-dom'
 
+const API_URL = import.meta.env.VITE_APP_API_URL || 'http://localhost:3001'
+
 const TrainLandingPage = () => {
   const [currtab, setCurrtab] = useState(0)
   const [date, setDate] = useState(new Date())
@@ -30,7 +32,7 @@ const TrainLandingPage = () => {
     if (!inputValue) return [];
     try {
       console.log("Fetching stations for:", inputValue);
-      const res = await axios.post("http://localhost:3001/api/train/stations", {
+      const res = await axios.post(`${API_URL}/api/train/stations`, {
         search: inputValue,
       });
       if(res.data.length === 0) {
@@ -72,7 +74,7 @@ const TrainLandingPage = () => {
     const dt = date.toISOString().split('T')[0]
     console.log(`Searching trains from ${from} to ${to} on ${dt}`)
     try {
-      const response = await axios.get(`http://localhost:3001/api/train/trainbetweenstations`, {
+      const response = await axios.get(`${API_URL}/api/train/trainbetweenstations`, {
         params: {
           from,
           to,

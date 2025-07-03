@@ -12,7 +12,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const clientDist = path.resolve(__dirname, '../../Frontend/dist')
 
-const whitelist = ['http://localhost:5173', 'https://tixly-seven.vercel.app'];
+const whitelist = ['http://localhost:5173', 'https://tixly-seven.vercel.app' , 'https://tixly.onrender.com'];
 
 const app=express();
 app.use(cors({
