@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { ThemeProvider } from './context/ThemeContext.jsx';
 import {Route, Routes, BrowserRouter, Outlet } from 'react-router-dom';
 import NavBarPublic from './components/NavBarPublic.jsx';
 import Home from './pages/Home.jsx';
@@ -23,6 +24,14 @@ import DashBoard from './pages/DashBoard.jsx';
 import Exclusives from './pages/Exclusives.jsx';
 import ForgotPassword from './pages/ForgotPassword.jsx';
 import TrainSearchList from './pages/TrainSearchList.jsx';
+import TrainBookingPage from './pages/TrainBookingPage.jsx';
+import TrainReviewPage from './pages/TrainReviewPage.jsx';
+import MovieLandingPage from './pages/MovieLandingPage.jsx';
+import BusSearchList from './pages/BusSearchList.jsx';
+import BusBookingPage from './pages/BusBookingPage.jsx';
+import PaymentPage from './pages/PaymentPage.jsx';
+import MovieShowtimes from './pages/MovieShowtimes.jsx';
+import MovieSeatSelection from './pages/MovieSeatSelection.jsx';
 
 const PrivateRoute = ({authChecked}) => { 
   const logged = useSelector((state) => state.logReducer.value);
@@ -64,9 +73,12 @@ const App = () => {
 
 
   return (
+    <ThemeProvider>
     <BrowserRouter>
-      <NavBarPublic />
-      <Routes>
+      <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300">
+        <NavBarPublic />
+        <main className="flex-grow">
+          <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/exclusive" element={<Exclusives />} />
@@ -79,23 +91,35 @@ const App = () => {
           <Route path='/forgot-password' element={<ForgotPassword />} />
         </Route>
 
-        {/* Private Routes added here */}
+        {/* Public Routes (Search & Landing Pages) */}
+        <Route path='/train' element={<TrainLandingPage />} />
+        <Route path='/bus' element={<BusLandingPage />} />
+        <Route path='/flight' element={<FlightLandingPage />} />
+        <Route path='/flight-search' element={<FlightSearchResults />} />
+        <Route path='/movie' element={<MovieLandingPage />} />
+        <Route path='/train-search' element={<TrainSearchList />} />
+        <Route path='/bus-search' element={<BusSearchList />} />
+        <Route path='/movie-showtimes' element={<MovieShowtimes />} />
+
+        {/* Private Routes (Booking, Review, Payment) */}
         <Route element={<PrivateRoute authChecked={authChecked} />}>
           <Route path='/dash' element={<DashBoard />} />
-          <Route path='/train' element={<TrainLandingPage />} />
-          <Route path='/bus' element={<BusLandingPage />} />
-          <Route path='/flight' element={<FlightLandingPage />} />
-          <Route path='/flight-search' element={<FlightSearchResults />} />
           <Route path='/flight-booking' element={<FlightBookingPage />} />
           <Route path='/flight-review' element={<FlightReviewPage />} />
-          <Route path='/movie' element={<TrainLandingPage />} />
-          <Route path='/train-search' element={<TrainSearchList />} />
+          <Route path='/train-booking' element={<TrainBookingPage />} />
+          <Route path='/train-review' element={<TrainReviewPage />} />
+          <Route path='/bus-booking' element={<BusBookingPage />} />
+          <Route path='/movie-seat-selection' element={<MovieSeatSelection />} />
+          <Route path='/payment' element={<PaymentPage />} />
         </Route>
         
         <Route path='*' element={<Home />} />
-      </Routes>
-      <Footer />
+          </Routes>
+        </main>
+        <Footer />
+      </div>
     </BrowserRouter>
+    </ThemeProvider>
   );
 };
 

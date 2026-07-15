@@ -1,61 +1,33 @@
-// user.router.js
-import express from 'express'
-import axios from 'axios'
-const router = express.Router()
+import express from 'express';
+import {
+  searchStations,
+  searchTrainsBetweenStations,
+  getTrainSchedule,
+  getTrainLiveLocation,
+  checkSeatAvailability,
+  getTrainFare
+} from '../controllers/train.controller.js';
 
+const router = express.Router();
 
+// Station search (POST with body)
+router.post('/stations', searchStations);
 
-// Proxy endpoint for station search
-router.post('/stations', async (req, res) => {
-  try {
-    const { search } = req.body
-    if (!search) return res.status(400).json({ error: 'Missing search term' })
-    const response = await axios.get(
-      'https://irctc1.p.rapidapi.com/api/v1/searchStation',
-      {
-        params: { query: search },
-        headers: {
-          'Content-Type': 'application/json',
-          'x-rapidapi-key': process.env.RAPIDAPI_KEY,
-          'x-rapidapi-host': process.env.RAPIDAPI_HOST
-        }
-      }
-    )
+// Trains search from one station to another
+router.get('/trainbetweenstations', searchTrainsBetweenStations);
 
-    // Return exactly what RapidAPI returned
-    res.json(response.data)
-  } catch (err) {
-    console.error('Station‐proxy error:', err.response?.data || err.message);
-    res.status(502).json({ error: 'Upstream service error' });
-  }
-})
+// Train schedule - supports both /trainschedule and /schedule
+router.get('/trainschedule', getTrainSchedule);
+router.get('/schedule', getTrainSchedule);
 
-// trains search from one station to another
-router.get('/trainbetweenstations', async (req, res) => {
-  const { from, to, date} = req.query
-  if (!from || !to || !date) {
-    return res.status(400).json({ error: 'Missing required parameters' })
-  }
+// Train live status - supports both /trainlivelocation and /status
+router.get('/trainlivelocation', getTrainLiveLocation);
+router.get('/status', getTrainLiveLocation);
 
-  try {
-    const response = await axios.get(
-      'https://irctc1.p.rapidapi.com/api/v3/trainBetweenStations',
-      {
-        params: { fromStationCode: from, toStationCode: to, dateOfJourney: date},
-        headers: {
-          'x-rapidapi-key': process.env.RAPIDAPI_KEY,
-          'x-rapidapi-host': process.env.RAPIDAPI_HOST
-        }
-      }
-    )
+// Seat availability
+router.get('/seatavailability', checkSeatAvailability);
 
-    // Return exactly what RapidAPI returned
-    console.log(response.data)
-    res.json(response.data)
-  } catch (err) {
-    console.error('Train search error:', err.response?.data || err.message);
-    res.status(502).json({ error: 'Upstream service error' });
-  }
-});
+// Train fare
+router.get('/trainfare', getTrainFare);
 
 export default router;

@@ -14,10 +14,10 @@ const TrainSearchList = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-6">
+    <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white p-6 transition-colors duration-300">
       <button
         onClick={() => navigate(-1)}
-        className="mb-4 inline-flex items-center px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm font-medium"
+        className="mb-4 inline-flex items-center px-4 py-2 bg-gray-300 dark:bg-gray-700 hover:bg-gray-600 rounded-lg text-sm font-medium"
       >
         ← Back
       </button>
@@ -29,13 +29,20 @@ const TrainSearchList = () => {
       </h1>
 
       <div className="md:max-w-[90%] mx-auto">
-        {(data.data || []).map((train, i) => (
+        {(data.data || []).length === 0 ? (
+          <div className="text-center py-16">
+            <p className="text-gray-400 text-xl">No trains found for this route on the selected date.</p>
+            <button onClick={() => navigate(-1)} className="mt-6 bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-full transition">
+              Try Another Search
+            </button>
+          </div>
+        ) : (data.data || []).map((train, i) => (
           <div
             key={i}
-            className="bg-gray-800 mb-4 p-4 rounded-2xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition"
+            className="bg-gray-800 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 mb-4 p-4 rounded-2xl shadow-sm hover:shadow-md transform hover:-translate-y-1 transition"
           >
             <div className="flex items-center flex-wrap gap-y-3 gap-x-2 justify-between mb-3">
-              <h2 className="text-md sm:text-xl font-semibold mr-10">
+              <h2 className="text-gray-200 text-md sm:text-xl font-semibold mr-10">
                 {train.train_name}{" "}
                 <span className="text-gray-400">({train.train_number})</span>
               </h2>
@@ -56,25 +63,26 @@ const TrainSearchList = () => {
               </p>
             </div>
 
-              <div className="mt-2 pt-2 border-t border-gray-700">
-                <p className="text-sm text-gray-300 mb-3">Fare:</p>
-                <div className="flex justify-start flex-wrap gap-x-8 gap-y-2">
-                  {train.class_type.map((classType, index) => {
-                    return (
-                      <button
-                        key={index}
-                        className="text-sm text-gray-400 border border-orange-500 rounded-lg p-1 min-w-[100px] text-center hover:bg-gray-500 hover:text-white transition duration-200"
-                      >
-                        <p>{classType}</p>
-                        <p>AVL - {train.score}</p>
-                        <span className="font-semibold text-orange-400">
-                          ₹{train.distance}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
+            <div className="mt-2 pt-2 border-t border-gray-700">
+              <p className="text-sm text-gray-300 mb-3">Fare:</p>
+              <div className="flex justify-start flex-wrap gap-x-8 gap-y-2">
+                {train.class_type.map((classType, index) => {
+                  return (
+                    <button
+                      key={index}
+                      onClick={() => navigate('/train-booking', { state: { train, classType, fare: train.distance } })}
+                      className="text-sm text-gray-400 border border-orange-500 rounded-lg p-1 min-w-[100px] text-center hover:bg-gray-500 hover:text-white transition duration-200"
+                    >
+                      <p>{classType}</p>
+                      <p>AVL - {train.score}</p>
+                      <span className="font-semibold text-orange-400">
+                        ₹{train.distance}
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
+            </div>
             {/* {train.curr_sa_title && (
             )} */}
           </div>

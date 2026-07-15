@@ -4,6 +4,9 @@ import cookieParser from 'cookie-parser'
 import userRouter from './routers/user.route.js';
 import flightRouter from './routers/flight.route.js';
 import trainRouter from './routers/train.route.js';
+import busRouter from './routers/bus.route.js';
+import movieRouter from './routers/movie.route.js';
+import paymentRouter from './routers/payment.route.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
@@ -12,7 +15,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const clientDist = path.resolve(__dirname, '../../Frontend/dist')
 
-const whitelist = ['http://localhost:5173', 'https://tixly-seven.vercel.app' , 'https://tixly-1.onrender.com'];
+const whitelist = ['http://localhost:5173', 'http://localhost:5174', 'http://127.0.0.1:5173', 'http://127.0.0.1:5174', 'https://tixly-seven.vercel.app' , 'https://tixly-1.onrender.com'];
 
 const app=express();
 app.use(cors({
@@ -36,6 +39,9 @@ app.use(cookieParser());
 app.use('/api/user', userRouter)
 app.use('/api/train', trainRouter);
 app.use('/api/flight', flightRouter);
+app.use('/api/bus', busRouter);
+app.use('/api/movie', movieRouter);
+app.use('/api/payment', paymentRouter);
 
 app.use(express.static(clientDist)); // Serve static files from the client build directory
 

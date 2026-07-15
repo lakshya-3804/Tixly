@@ -15,8 +15,13 @@ const FlightReviewPage = () => {
   }
 
   const handleConfirm = () => {
-    alert('Booking confirmed!');
-    // You can redirect or clear state here
+    navigate('/payment', { 
+      state: { 
+        amount: flight.price.total, 
+        bookingType: 'Flight',
+        bookingDetails: { flight, travelers }
+      } 
+    });
   };
 
   const handleBack = () => {

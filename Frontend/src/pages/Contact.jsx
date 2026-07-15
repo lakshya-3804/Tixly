@@ -128,14 +128,14 @@ const Contact = () => {
           </h2>
           <div className="w-full h-[400px] bg-gray-200 border-2 border-black rounded-lg flex items-center justify-center">
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3561.191064750364!2d81.0159573747543!3d26.80204426483899!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x399be30010416e29%3A0x510633ce6dd735ec!2sLucknow%20vikas%20pradhikaran%20Chauraha!5e0!3m2!1sen!2sin!4v1749217225380!5m2!1sen!2sin"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d521.9957806540914!2d77.68412487658541!3d13.369746117015433!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bb1e445ebfcea17%3A0x1639f72959196608!2sNandi%20Hills%2C%20Karnataka!5e1!3m2!1sen!2sin!4v1784026529806!5m2!1sen!2sin"
               width="100%"
               height="100%"
               className='rounded-lg'
-              style={{border:0}}
+              style={{ border: 0 }}
               allowfullscreen=""
               loading="lazy"
-              referrerpolicy="no-referrer-when-downgrade"
+              referrerPolicy="no-referrer-when-downgrade"
             ></iframe>
           </div>
         </div>

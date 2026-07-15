@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:5000/api/flight';
+const API_BASE_URL = `${import.meta.env.VITE_APP_API_URL || 'http://localhost:3001'}/api/flight`;
 
 const FlightSearchResults = () => {
   const location = useLocation();
@@ -105,17 +105,17 @@ const FlightSearchResults = () => {
             
             {/* Price Range */}
             <div className="mb-4">
-              <h3 className="text-gray-300 mb-2">Price Range (USD)</h3>
+              <h3 className="text-gray-300 mb-2">Price Range (INR)</h3>
               <input
                 type="range"
                 min="0"
-                max="1000"
+                max="100000"
                 value={filters.priceRange.max}
                 onChange={(e) => handleFilter('priceRange', { ...filters.priceRange, max: e.target.value })}
                 className="w-full"
               />
               <div className="text-gray-400 text-sm">
-                $0 - ${filters.priceRange.max}
+                ₹0 - ₹{filters.priceRange.max}
               </div>
             </div>
 
@@ -196,8 +196,8 @@ const FlightSearchResults = () => {
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="text-white text-2xl">
-                        ${flight.price.total}
+                      <p className="text-white text-2xl font-bold">
+                        ₹{flight.price.total}
                       </p>
                       <button className="mt-2 bg-orange-500 text-white px-6 py-2 rounded-lg hover:bg-orange-600"
                         onClick={() => navigate('/flight-booking', { state: { flight, travelerCounts: location.state?.searchParams } })}>

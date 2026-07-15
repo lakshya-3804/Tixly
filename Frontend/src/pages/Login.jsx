@@ -1,7 +1,7 @@
-import React,{useState} from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { auth } from "../firebase.js";
-import { signInWithEmailAndPassword , fetchSignInMethodsForEmail} from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { useDispatch } from 'react-redux';
 import { login } from '../redux/logSlice.js';
 import { useNavigate } from 'react-router-dom';
@@ -40,7 +40,7 @@ const Login = () => {
   
 
   return (
-    <div className="mx-auto mt-[60px] w-[80%] sm:w-full max-w-sm p-6 border rounded-lg shadow md:p-8 dark:bg-gray-900 dark:border-gray-700">
+    <div className="mx-auto mt-[60px] w-[80%] sm:w-full max-w-sm p-6 border rounded-lg shadow md:p-8 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700">
         <form className="space-y-6" action="#" type='submit' onSubmit={handleLogin}>
           <h5 className="text-xl font-medium text-gray-900 dark:text-white">Sign in to our platform</h5>
           

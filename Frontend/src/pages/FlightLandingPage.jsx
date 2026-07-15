@@ -1,4 +1,5 @@
 import React , {useState} from 'react'
+import { useTheme } from '../context/ThemeContext.jsx';
 import Select from 'react-select'
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css";
@@ -8,7 +9,7 @@ import '../components/dropdown.css'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const API_BASE_URL = 'http://localhost:5000/api/flight';
+const API_BASE_URL = 'http://localhost:3001/api/flight';
 
 const FlightLandingPage = () => {
   const navigate = useNavigate();
@@ -24,12 +25,54 @@ const FlightLandingPage = () => {
   const [error, setError] = useState(null);
   const [loadingAirports, setLoadingAirports] = useState(false);
   const [selectedClass, setSelectedClass] = useState('All Class');
+  const { isDark } = useTheme();
+
+  const customSelectStyles = {
+    control: (baseStyles, state) => ({
+      ...baseStyles,
+      backgroundColor: isDark ? '#1f2937' : '#ffffff', 
+      color: isDark ? 'white' : '#111827',
+      borderColor: state.isFocused ? '#f97316' : (isDark ? '#4b5563' : '#d1d5db'), 
+      boxShadow: state.isFocused ? '0 0 0 1px #f97316' : 'none',
+      width: '250px',
+      fontSize: '1.1rem',
+      borderRadius: '0.5rem',
+      padding: '2px',
+      cursor: 'text',
+      transition: 'all 0.2s ease',
+    }),
+    singleValue: (base) => ({ ...base, color: isDark ? 'white' : '#111827' }),
+    input: (base) => ({ ...base, color: isDark ? 'white' : '#111827' }), 
+    menu: (base) => ({
+      ...base,
+      backgroundColor: isDark ? '#1f2937' : '#ffffff',
+      borderRadius: '0.5rem',
+      boxShadow: isDark ? '0 10px 15px -3px rgba(0, 0, 0, 0.5)' : '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+      overflow: 'hidden',
+      zIndex: 9999,
+    }),
+    option: (base, state) => ({
+      ...base,
+      backgroundColor: state.isFocused ? (isDark ? '#374151' : '#f3f4f6') : (isDark ? '#1f2937' : '#ffffff'),
+      color: isDark ? 'white' : '#111827',
+      cursor: 'pointer',
+      padding: '10px 12px',
+      transition: 'background-color 0.1s ease',
+    }),
+    placeholder: (base) => ({
+      ...base,
+      color: isDark ? '#9ca3af' : '#6b7280',
+    }),
+  };
+
   const [travellers, setTravellers] = useState({
     infants: 0,
     kids: 0,
     adults: 1,   
     senior: 0,
   });
+
+  const searchTimeoutRef = React.useRef(null);
 
   const ClassOptions = [
     'All Class', 'ECONOMY', 'PREMIUM_ECONOMY', 'BUSINESS', 'FIRST'
@@ -51,37 +94,30 @@ const FlightLandingPage = () => {
       setError(null);
       
       if (!inputValue || typeof inputValue !== 'string') {
-        console.log('Frontend: Invalid input value:', inputValue);
         return [];
       }
 
       const keyword = inputValue.trim();
-      if (!keyword) {
+      if (!keyword || keyword.length < 2) {
         return [];
       }
       
-      console.log('Frontend: Searching airports for:', keyword);
       const response = await axios.get(`${API_BASE_URL}/airports`, {
         params: { keyword }
       });
       
-      console.log('Frontend: Raw response:', response);
-      console.log('Frontend: Response data:', response.data);
       
       if (!response.data || response.data.length === 0) {
-        console.log('Frontend: No airports found');
         return [];
       }
 
       const formattedAirports = response.data.map(airport => {
-        console.log('Frontend: Processing airport:', airport);
         return {
           value: airport.iataCode,
           label: `${airport.name} (${airport.iataCode}) - ${airport.cityName}, ${airport.countryName}`
         };
       });
 
-      console.log('Frontend: Final formatted airports:', formattedAirports);
       setAirports(formattedAirports);
       return formattedAirports;
     } catch (error) {
@@ -90,7 +126,9 @@ const FlightLandingPage = () => {
         response: error.response?.data,
         status: error.response?.status
       });
-      setError(error.response?.data?.details || 'Failed to search airports');
+      const details = error.response?.data?.details;
+      const errorMessage = typeof details === 'object' ? (details.message || JSON.stringify(details)) : details;
+      setError(errorMessage || 'Failed to search airports');
       return [];
     } finally {
       setLoadingAirports(false);
@@ -123,9 +161,7 @@ const FlightLandingPage = () => {
         searchParams.returnDate = dateReturn.toISOString().split('T')[0];
       }
 
-      console.log('Search params:', searchParams);
 
-      // Navigate to search results page with search parameters
       navigate('/flight-search', { 
         state: { 
           searchParams,
@@ -142,24 +178,24 @@ const FlightLandingPage = () => {
   };
 
   return (
-    <div>
-      <div className='bg-gray-900 w-[80%] m-auto rounded-lg mt-12'>
+    <div className="min-h-full">
+      <div className='bg-slate-900 dark:bg-slate-900 w-[90%] max-w-5xl m-auto rounded-2xl mt-10 mb-10 shadow-lg border border-slate-800 dark:border-gray-700'>
 
         {/* Tabs */}
-        <div className="border-b border-gray-700">
-            <ul className="flex flex-wrap justify-evenly -mb-px text-sm font-medium text-center text-gray-400 w-full">
-                <li class={`me-2`}>
-                    <a href="#" className={`inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg hover:border-gray-300 hover:text-gray-300 group ${currtab === 0 ? 'border-b-2 text-white border-white' : ''}`} onClick={()=>setCurrtab(0)}>
+        <div className="border-b border-gray-200 dark:border-gray-700">
+            <ul className="flex flex-wrap justify-evenly text-sm font-medium text-center w-full">
+                <li className="flex-1">
+                    <a href="#" className={`inline-flex w-full items-center justify-center p-4 border-b-2 transition-colors ${currtab === 0 ? 'border-orange-500 text-orange-500' : 'border-transparent text-slate-400 hover:text-slate-200'}`} onClick={()=>setCurrtab(0)}>
                         One Way
                     </a>
                 </li>
-                <li class="me-2">
-                    <a href="#" className={`inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg hover:border-gray-300 hover:text-gray-300 group ${currtab === 1 ? 'border-b-2 text-white border-white' : ''}`} onClick={()=>setCurrtab(1)}>
+                <li className="flex-1">
+                    <a href="#" className={`inline-flex w-full items-center justify-center p-4 border-b-2 transition-colors ${currtab === 1 ? 'border-orange-500 text-orange-500' : 'border-transparent text-slate-400 hover:text-slate-200'}`} onClick={()=>setCurrtab(1)}>
                         Round Trip
                     </a>
                 </li>
-                <li class="me-2">
-                    <a href="#" class={`inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg hover:border-gray-300 hover:text-gray-300 group ${currtab === 2 ? 'border-b-2 text-white border-white' : ''}`} onClick={()=>setCurrtab(2)}>
+                <li className="flex-1">
+                    <a href="#" className={`inline-flex w-full items-center justify-center p-4 border-b-2 transition-colors ${currtab === 2 ? 'border-orange-500 text-orange-500' : 'border-transparent text-slate-400 hover:text-slate-200'}`} onClick={()=>setCurrtab(2)}>
                         Multi City
                     </a>
                 </li>
@@ -172,35 +208,15 @@ const FlightLandingPage = () => {
                 <h1 className='text-3xl text-white text-center mt-8'>Book Flight Tickets</h1>
                 <div className='flex flex-wrap justify-center items-center gap-4 mt-8'>
 
-                    <Select styles={{
-                        control:(baseStyles, state) => ({
-                            ...baseStyles,
-                            backgroundColor: '#374151',
-                            color: 'white',
-                            borderColor: '#4b5563',
-                            width: '250px',
-                            fontSize: '1.2rem',
-                            borderRadius: '0.375rem',
-                        }),
-                        menu: (base) => ({
-                          ...base,
-                          backgroundColor: '#374151',
-                          color: 'white',
-                        }),
-                        option: (base, state) => ({
-                          ...base,
-                          backgroundColor: state.isFocused ? '#4b5563' : '#374151',
-                          color: 'white',
-                          ':active': {
-                            backgroundColor: '#4b5563',
-                          },
-                        }),
-                    }} placeholder='From'
+                    <Select styles={customSelectStyles} placeholder='From'
                       value={selectedFrom}
                       onChange={setSelectedFrom}
                       onInputChange={(value) => {
                         if (value) {
-                          handleAirportSearch(value);
+                          if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
+                          searchTimeoutRef.current = setTimeout(() => {
+                            handleAirportSearch(value);
+                          }, 500);
                         }
                       }}
                       isLoading={loadingAirports}
@@ -208,35 +224,15 @@ const FlightLandingPage = () => {
                       options={airports}
                      />
 
-                    <Select styles={{
-                        control:(baseStyles, state) => ({
-                            ...baseStyles,
-                            backgroundColor: '#374151',
-                            color: 'white',
-                            borderColor: '#4b5563',
-                            width: '250px',
-                            fontSize: '1.2rem',
-                            borderRadius: '0.375rem',
-                        }),
-                        menu: (base) => ({
-                          ...base,
-                          backgroundColor: '#374151',
-                          color: 'white',
-                        }),
-                        option: (base, state) => ({
-                          ...base,
-                          backgroundColor: state.isFocused ? '#4b5563' : '#374151',
-                          color: 'white',
-                          ':active': {
-                            backgroundColor: '#4b5563',
-                          },
-                        }),
-                    }} placeholder='To' 
+                    <Select styles={customSelectStyles} placeholder='To' 
                     value={selectedTo}
                       onChange={setSelectedTo}
                       onInputChange={(value) => {
                         if (value) {
-                          handleAirportSearch(value);
+                          if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
+                          searchTimeoutRef.current = setTimeout(() => {
+                            handleAirportSearch(value);
+                          }, 500);
                         }
                       }}
                       isLoading={loadingAirports}
@@ -247,7 +243,7 @@ const FlightLandingPage = () => {
 
                   <div className="flex relative">
                       <svg
-                        className="absolute left-3 top-[15px] z-10 w-4 h-4 text-gray-400"
+                        className="absolute left-3 top-[15px] z-10 w-4 h-4 text-gray-500 dark:text-gray-400"
                         aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="currentColor"
@@ -262,7 +258,7 @@ const FlightLandingPage = () => {
                       maxDate={new Date(new Date().setMonth(new Date().getMonth() + 3))}
                       placeholderText="Departure"
                       dateFormat="dd/MM/yyyy"
-                      className="border text-md rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[250px] h-full ps-10 p-[11px] bg-gray-700 border-gray-600 text-white"
+                      className="border text-md rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[250px] h-full ps-10 p-[11px] bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white"
                     />
                   </div>
 
@@ -276,12 +272,12 @@ const FlightLandingPage = () => {
                   <div className="relative">
                     <button
                         onClick={() => setShowTravellers(!showTravellers)}
-                        className=" bg-gray-700 text-gray-100 px-6 py-2.5 rounded-lg text-xl w-64"
+                        className="bg-white dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 px-6 py-2.5 rounded-lg text-xl w-64 text-left shadow-sm"
                     >
                         {`Travellers`}
                     </button>
                     {showTravellers && (
-                        <div className="absolute bg-gray-700 text-gray-100 p-4 mt-2 shadow-lg z-10 rounded-lg w-64">
+                        <div className="absolute bg-white dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-600 p-4 mt-2 shadow-lg z-10 rounded-lg w-64">
                         {[
                             { key: 'infants', label: 'Infants (0-2)' },
                             { key: 'kids', label: 'Kids (3-12)' },
@@ -327,7 +323,7 @@ const FlightLandingPage = () => {
 
             <div className='flex justify-center items-center mt-4'>
                 <button 
-                  className='bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 disabled:opacity-50'
+                  className='bg-gradient-to-r from-orange-500 to-orange-600 text-white px-8 py-3 rounded-full text-lg font-semibold shadow-lg hover:shadow-xl hover:from-orange-600 hover:to-orange-700 transition-all transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none'
                   onClick={handleSearch}
                   disabled={loading}
                 >
@@ -378,34 +374,14 @@ const FlightLandingPage = () => {
                 <h1 className='text-3xl text-white text-center mt-8'>Book Flight Tickets</h1>
                 <div className='flex flex-wrap justify-center items-center gap-4 mt-8'>
 
-                    <Select styles={{
-                        control:(baseStyles, state) => ({
-                            ...baseStyles,
-                            backgroundColor: '#374151',
-                            color: 'white',
-                            borderColor: '#4b5563',
-                            width: '250px',
-                            fontSize: '1.2rem',
-                            borderRadius: '0.375rem',
-                        }),
-                    }} placeholder='From' />
+                    <Select styles={customSelectStyles} placeholder='From' />
 
-                    <Select styles={{
-                        control:(baseStyles, state) => ({
-                            ...baseStyles,
-                            backgroundColor: '#374151',
-                            color: 'white',
-                            borderColor: '#4b5563',
-                            width: '250px',
-                            fontSize: '1.2rem',
-                            borderRadius: '0.375rem',
-                        }),
-                    }} placeholder='To' />
+                    <Select styles={customSelectStyles} placeholder='To' />
 
 
                   <div className="flex relative">
                       <svg
-                        className="absolute left-3 top-[15px] z-10 w-4 h-4 text-gray-400"
+                        className="absolute left-3 top-[15px] z-10 w-4 h-4 text-gray-500 dark:text-gray-400"
                         aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="currentColor"
@@ -420,13 +396,13 @@ const FlightLandingPage = () => {
                       maxDate={new Date(new Date().setMonth(new Date().getMonth() + 3))}
                       placeholderText="Departure"
                       dateFormat="dd/MM/yyyy"
-                      className="border text-md rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[250px] h-full ps-10 p-[11px] bg-gray-700 border-gray-600 text-white"
+                      className="border text-md rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[250px] h-full ps-10 p-[11px] bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white"
                     />
                   </div>
 
                   <div className="flex relative">
                       <svg
-                        className="absolute left-3 top-[15px] z-10 w-4 h-4 text-gray-400"
+                        className="absolute left-3 top-[15px] z-10 w-4 h-4 text-gray-500 dark:text-gray-400"
                         aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="currentColor"
@@ -441,7 +417,7 @@ const FlightLandingPage = () => {
                       maxDate={new Date(new Date().setMonth(new Date().getMonth() + 3))}
                       placeholderText="Return"
                       dateFormat="dd/MM/yyyy"
-                      className="border text-md rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[250px] h-full ps-10 p-[11px] bg-gray-700 border-gray-600 text-white"
+                      className="border text-md rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[250px] h-full ps-10 p-[11px] bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white"
                     />
                   </div>
 
@@ -455,12 +431,12 @@ const FlightLandingPage = () => {
                   <div className="relative">
                     <button
                         onClick={() => setShowTravellers(!showTravellers)}
-                        className=" bg-gray-700 text-gray-100 px-6 py-2.5 rounded-lg text-xl w-64"
+                        className="bg-white dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 px-6 py-2.5 rounded-lg text-xl w-64 text-left shadow-sm"
                     >
                         {`Travellers`}
                     </button>
                     {showTravellers && (
-                        <div className="absolute bg-gray-700 text-gray-100 p-4 mt-2 shadow-lg z-10 rounded-lg w-64">
+                        <div className="absolute bg-white dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-600 p-4 mt-2 shadow-lg z-10 rounded-lg w-64">
                         {[
                             { key: 'infants', label: 'Infants (0-2)' },
                             { key: 'kids', label: 'Kids (3-12)' },
@@ -499,13 +475,20 @@ const FlightLandingPage = () => {
             </div>
 
             <div className='flex justify-center items-center mt-4'>
-                <button className='bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600'>Search</button>
+                <button onClick={handleSearch} className='bg-gradient-to-r from-orange-500 to-orange-600 text-white px-8 py-3 rounded-full text-lg font-semibold shadow-lg hover:shadow-xl hover:from-orange-600 hover:to-orange-700 transition-all transform hover:-translate-y-1'>
+                  Search
+                </button>
             </div>
 
         </div>
-
-
-
+        
+        {/* MULTI CITY */}
+        <div className={`pb-6 w-[90%] m-auto mt-12 ${currtab === 2 ? 'block' : 'hidden'}`}>
+            <div className='mt-12 mb-12 flex flex-col items-center justify-center min-h-[300px]'>
+                <h1 className='text-4xl text-orange-400 font-bold mb-4'>Coming Soon!</h1>
+                <p className='text-gray-300 text-xl text-center max-w-2xl'>We are currently partnering with major airlines to bring you the best multi-city booking experience. Check back soon for updates!</p>
+            </div>
+        </div>
 
       </div>
     </div>

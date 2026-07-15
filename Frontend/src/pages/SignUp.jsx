@@ -48,7 +48,7 @@ const SignUp = () => {
   }
 
   return (
-    <div className="mx-auto mt-[60px] w-[80%] sm:w-full max-w-sm p-6 border rounded-lg shadow md:p-8 bg-gray-900 border-gray-700">
+    <div className="mx-auto mt-[60px] w-[80%] sm:w-full max-w-sm p-6 border rounded-lg shadow md:p-8 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700">
         <form onSubmit={handleSignup} className="space-y-6" action="#">
           <h5 className="text-xl font-medium text-gray-900 dark:text-white">Register to our platform</h5>
           <div>
